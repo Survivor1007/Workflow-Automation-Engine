@@ -1,3 +1,4 @@
+```mermaid
 graph TD
     User([Human Operator / Dev]) -->|Configures & Monitors Workflows| FE[React Frontend]
     
@@ -12,3 +13,4 @@ graph TD
     end
     
     style Self_Hosted_Boundary fill:#f9f9f9,stroke:#333,stroke-width:2px,stroke-dasharray: 5 5
+```

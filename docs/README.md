@@ -38,7 +38,7 @@ Use this map to navigate the implementation, engineering decisions, and system b
 
 ## 🎨 System Diagrams Source
 Raw Mermaid definitions are tracked independently within the `diagrams/` folder for easier iterative updates:
-* [System Context Schema](diagrams/system-context.mmd)
-* [High-Level Architecture Schema](diagrams/high-level-architecture.mmd)
-* [Execution Sequence Schema](diagrams/workflow-execution-sequence.mmd)
-* [Entity-Relationship Schema](diagrams/er-diagram.mmd)
+* [System Context Schema](diagrams/system-context.md)
+* [High-Level Architecture Schema](diagrams/high-level-architecture.md)
+* [Execution Sequence Schema](diagrams/workflow-execution-sequence.md)
+* [Entity-Relationship Schema](diagrams/er-diagram.md)
