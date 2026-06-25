@@ -1,0 +1,16 @@
+```mermaid
+graph TD
+    User([Human Operator / Dev]) -->|Configures & Monitors Workflows| FE[React Frontend]
+    
+    ExtSystem[External Third-Party Systems] -->|Triggers Webhook Events| BE[FastAPI Backend Engine]
+    BE -->|Dispatches Outbound Actions| ExtSystem
+    
+    FE -->|Interacts via Local HTTP REST API| BE
+    
+    subgraph Self_Hosted_Boundary [Self-Hosted Environment]
+        FE
+        BE
+    end
+    
+    style Self_Hosted_Boundary fill:#f9f9f9,stroke:#333,stroke-width:2px,stroke-dasharray: 5 5
+```
