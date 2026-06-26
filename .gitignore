@@ -1,0 +1,107 @@
+# ==========================================
+# Workflow Automation Engine - .gitignore
+# ==========================================
+
+# ------------------------------------------
+# 1. Project Specific (Storage & Logs)
+# ------------------------------------------
+# Ignore local SQLite databases to maintain data privacy and zero per-execution overhead
+*.db
+*.sqlite3
+backend/database/*.db
+
+# Ignore structured JSONL logs to prevent committing execution trace dumps
+logs/*.jsonl
+backend/logs/*.jsonl
+*.log
+
+# ------------------------------------------
+# 2. Backend (Python / FastAPI)
+# ------------------------------------------
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environments
+venv/
+env/
+.venv/
+.env/
+env.bak/
+venv.bak/
+
+# Environment variables
+.env
+.env.local
+
+# ------------------------------------------
+# 3. Frontend (React / Vite / TypeScript)
+# ------------------------------------------
+# Node dependencies
+node_modules/
+.npm/
+
+# Build outputs
+dist/
+dist-ssr/
+build/
+
+# Vite
+*.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Caches
+.eslintcache
+.stylelintcache
+
+# TypeScript
+*.tsbuildinfo
+
+# ------------------------------------------
+# 4. OS & Editor (VS Code / Linux / Mac)
+# ------------------------------------------
+# VS Code Remote SSH & Local
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# Mac/Windows System files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
