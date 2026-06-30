@@ -2,6 +2,15 @@ from fastapi import FastAPI
 from backend.database.database import engine, Base
 from backend.database import models
 
+# Import Engine & Providers
+from backend.engine.workflow_engine import ProviderRegistry
+from backend.providers.actions.formatter_action import TextFormatterAction
+from backend.providers.actions.logger_action import LoggerAction
+
+# Register the actions so the Engine knows how to execute them
+ProviderRegistry.register_action("TEXT_FORMATTER", TextFormatterAction)
+ProviderRegistry.register_action("LOGGER", LoggerAction)
+
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
