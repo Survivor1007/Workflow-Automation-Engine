@@ -11,6 +11,8 @@ from backend.providers.actions.logger_action import LoggerAction
 ProviderRegistry.register_action("TEXT_FORMATTER", TextFormatterAction)
 ProviderRegistry.register_action("LOGGER", LoggerAction)
 
+# Import routers
+from backend.api.routes import workflows
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
@@ -18,6 +20,10 @@ app = FastAPI(
       description="A self hosted, local-first automation platform",
       version="1.0.0"
 )
+
+# Register the routers 
+app.include_router(workflows.router)
+
 
 @app.get("/health")
 def health_check():
