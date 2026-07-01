@@ -1,9 +1,15 @@
+import os
+from dotenv import load_dotenv
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 
 
 # Store the SQLite database in the backend directory
-SQLALCHEMY_DATABASE_URL = "sqlite:///./workflow_engine.db"
+# SQLALCHEMY_DATABASE_URL = "sqlite:///./workflow_engine.db"
+load_dotenv(dotenv_path="../.env")
+
+SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./data/workflow_engine.db")
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, 

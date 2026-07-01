@@ -1,0 +1,14 @@
+# docker-compose.yml
+services:
+  backend:
+    container_name: we-backend
+    build: ./backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - "./backend:/app/backend"
+      - "./backend/logs:/app/backend/logs"
+      -  "./data:/app/data"
+    environment:
+     - PYTHONBUFFERED=1
+     - PYTHONPATH=/app

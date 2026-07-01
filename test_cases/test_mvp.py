@@ -5,7 +5,7 @@ BASE_URL = "http://127.0.0.1:8000"
 
 def run_test():
     print("1. Creating a new workflow")
-    res = requests.post(f"{BASE_URL}/workflows/", json={"name": "MVP Test Pipeline", "is_active": True })
+    res = requests.post(f"{BASE_URL}/workflows/", json={"name": "MVP 2 Test Pipeline", "is_active": True })
     workflow_id  = res.json()["id"]
     print(f"  -> Workflow created with ID: {workflow_id}\n")
 

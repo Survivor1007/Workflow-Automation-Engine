@@ -1,0 +1,42 @@
+# --- Version Control ---
+.git
+.gitignore
+
+# --- Python Environment ---
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+.venv/
+venv/
+
+# --- Database & Logs (Data persistence) ---
+# We keep these out of the image to ensure the container 
+# relies on volumes for persistent data.
+backend/database.db
+backend/logs/*.jsonl
+backend/logs/*.log
+workflow_engine.db
+
+# --- Frontend Build & Deps ---
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# --- IDE & OS metadata ---
+.vscode/
+.idea/
+.DS_Store
+
+# --- Environment Variables ---
+.env
+
+# --- Test Cases ---
+test_cases/
+test_cases/*.py
+
+# --- Docs ---
+docs/
+docs/*.md
