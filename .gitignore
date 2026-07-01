@@ -14,7 +14,7 @@ backend/database/*.db
 logs/*.jsonl
 backend/logs/*.jsonl
 *.log
-
+!backend/logs/.gitkeep
 # ------------------------------------------
 # 2. Backend (Python / FastAPI)
 # ------------------------------------------

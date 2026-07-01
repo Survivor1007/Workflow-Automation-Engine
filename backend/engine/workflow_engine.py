@@ -58,7 +58,7 @@ class WorkflowEngine:
                 rendered_config[key] = value
         return rendered_config
     
-    def execute_workflow(self, workflow_id: int, trigger_payload: Dict[str, Any]) -> None:
+    async def execute_workflow(self, workflow_id: int, trigger_payload: Dict[str, Any]) -> None:
         """
         The primary runtime execution loop.
         """
@@ -105,7 +105,7 @@ class WorkflowEngine:
                     
                     # Merge rendered config into context so the provider can access its specific settings
                     step_execution_context = {**current_context, "config": rendered_config}
-                    output_payload = action_provider.execute(step_execution_context)
+                    output_payload = await action_provider.execute(step_execution_context)
 
                     # Append isolated step output to the universal data bus
                     context_manager.add_step_output(f"step_{step.step_order}", output_payload)
@@ -115,6 +115,8 @@ class WorkflowEngine:
 
             except Exception as e:
                 # 5. Fail-Fast Enforcement and No Silent Hiding
+                self.db.rollback()
+                
                 error_details = f"{str(e)}\n{traceback.format_exc()}"
                 
                 if exec_step:

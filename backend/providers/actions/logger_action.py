@@ -10,10 +10,10 @@ class LoggerAction(BaseAction):
     Outputs structured context or messages directly to local JSONL logs 
     for real-time debugging and verification.
     """
-    def __int__(self):
+    def __init__(self):
         # Ensure 'logs' directory exists
-        os.makedirs("logs", exist_ok=True)
-        self.log_file = "logs/providers.jsonl"
+        os.makedirs("backend/logs", exist_ok=True)
+        self.log_file = "backend/logs/providers.jsonl"
     
     async def execute(self, context: Dict[str, Any]) -> Dict[str, Any]:
         config = context.get("config", {})

@@ -61,7 +61,7 @@ class ExecutionTracker:
         execution = self.db.query(WorkflowExecution).filter(WorkflowExecution.id == self.execution_id).first()
         if execution:
             execution.status = "SUCCESS"
-            execution.completed_at = timezone.now(timezone.utc)
+            execution.completed_at = datetime.now(timezone.utc)
             self.db.commit()
 
     def mark_failed(self, error_message: str) -> None:
@@ -73,5 +73,5 @@ class ExecutionTracker:
         if execution:
             execution.status = "FAILED"
             execution.error_message = error_message
-            execution.completed_at = timezone.now(timezone.utc)
+            execution.completed_at = datetime.now(timezone.utc)
             self.db.commit()
