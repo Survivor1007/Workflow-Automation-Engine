@@ -11,7 +11,7 @@ __pycache__/
 .Python
 .venv/
 venv/
-
+*/venv
 # --- Database & Logs (Data persistence) ---
 # We keep these out of the image to ensure the container 
 # relies on volumes for persistent data.

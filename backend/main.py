@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from backend.database.database import engine, Base
 from backend.database import models
 
@@ -21,7 +22,16 @@ app = FastAPI(
       version="1.0.0"
 )
 
-# Register the routers 
+# --- Add CORSMiddleware ---
+app.add_middleware(
+      CORSMiddleware,
+      allow_origins=["*"],
+      allow_credentials=True,
+      allow_methods=["*"],
+      allow_headers=["*"]
+)
+
+# --- Register the routers ---
 app.include_router(workflows.router)
 
 

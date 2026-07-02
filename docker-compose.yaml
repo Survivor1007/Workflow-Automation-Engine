@@ -15,4 +15,4 @@ services:
     environment:
      - PYTHONUNBUFFERED=1
      - PYTHONPATH=/app
-     - DATABASE_URL=sqlite:///./data/workflow_engine.db
+     - DATABASE_URL=${DATABASE_URL}
