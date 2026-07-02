@@ -1,8 +1,11 @@
 # docker-compose.yml
 services:
   backend:
-    container_name: we-backend
-    build: ./backend
+
+    container_name: we-backend-1
+    build: 
+      context: .
+      dockerfile: backend/Dockerfile
     ports:
       - "8000:8000"
     volumes:
@@ -10,5 +13,6 @@ services:
       - "./backend/logs:/app/backend/logs"
       -  "./data:/app/data"
     environment:
-     - PYTHONBUFFERED=1
+     - PYTHONUNBUFFERED=1
      - PYTHONPATH=/app
+     - DATABASE_URL=sqlite:///./data/workflow_engine.db
