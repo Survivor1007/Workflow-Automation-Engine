@@ -1,9 +1,12 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from contextlib import asynccontextmanager
+
 from backend.database.database import engine, Base
-from backend.database import models
+
 
 # Import Engine & Providers
+from backend.providers.provider_registry import ProviderRegistry
 from backend.engine.workflow_engine import ProviderRegistry
 from backend.providers.actions.formatter_action import TextFormatterAction
 from backend.providers.actions.logger_action import LoggerAction
@@ -16,10 +19,26 @@ ProviderRegistry.register_action("LOGGER", LoggerAction)
 from backend.api.routes import workflows
 Base.metadata.create_all(bind=engine)
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+      # --- Startup logic ---
+      print("Initializing Workflow Automation Engine...")
+
+      # Load core providers into the memory
+      ProviderRegistry.register_core_providers()
+      print("Core Providers successfully registered.")
+
+      yield
+
+      print("Shutting down engine...")
+
+
+
 app = FastAPI(
       title = "Workflow Automation Engine",
       description="A self hosted, local-first automation platform",
-      version="1.0.0"
+      version="1.0.0",
+      lifespan=lifespan
 )
 
 # --- Add CORSMiddleware ---

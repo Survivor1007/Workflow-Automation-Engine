@@ -1,6 +1,10 @@
+# ---
+# File: backend/engine/workflow_engine.py
+# Function: Main orchestration area of the system
+# ---
 import traceback
 from sqlalchemy.orm import Session
-from typing import Type, Dict, Any
+from typing import  Dict, Any
 
 from backend.database.models.workflow import Workflow
 from backend.database.models.workflow_step import WorkflowStep
@@ -8,25 +12,9 @@ from backend.engine.context_manager import ContextManager
 from backend.engine.template_renderer import TemplateRenderer
 from backend.engine.execution_tracker import ExecutionTracker
 
-from backend.providers.actions.base_action import BaseAction
+from backend.providers.provider_registry import ProviderRegistry
 
-class ProviderRegistry:
-    """
-    A simple registry to map string provider names from the database 
-    to their actual Python class implementations.
-    """
-    _actions: Dict[str, Type[BaseAction]] ={}
 
-    @classmethod
-    def register_action(cls, name: str, action_class: Type[BaseAction]):
-        cls._actions[name] = action_class
-    
-    @classmethod
-    def get_action(cls, name: str) -> BaseAction:
-        if name not in cls._actions:
-            raise ValueError(f"Action Provider: '{name}' is not registered")
-        return cls._actions[name]()
-    
 
 class WorkflowEngine:
     """
