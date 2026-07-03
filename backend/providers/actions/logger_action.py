@@ -1,9 +1,13 @@
-import os
+# ---
+# File: backend/providers/actions/logger_action.py
+# Function: Defines the logging folder by their type and logging structure
+# ---
 import json
 from datetime import datetime, timezone
 from typing import Dict, Any
 
 from backend.providers.actions.base_action import BaseAction
+from backend.core.constants import LOGS_DIR, PROVIDER_LOG_PATH
 
 class LoggerAction(BaseAction):
     """
@@ -12,8 +16,8 @@ class LoggerAction(BaseAction):
     """
     def __init__(self):
         # Ensure 'logs' directory exists
-        os.makedirs("backend/logs", exist_ok=True)
-        self.log_file = "backend/logs/providers.jsonl"
+        LOGS_DIR.makedirs(parents=True, exist_ok=True)
+        self.log_file = PROVIDER_LOG_PATH
     
     async def execute(self, context: Dict[str, Any]) -> Dict[str, Any]:
         config = context.get("config", {})

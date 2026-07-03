@@ -12,6 +12,8 @@ __pycache__/
 .venv/
 venv/
 */venv
+backend/venv/
+
 # --- Database & Logs (Data persistence) ---
 # We keep these out of the image to ensure the container 
 # relies on volumes for persistent data.
@@ -36,6 +38,9 @@ frontend/.vite/
 # --- Test Cases ---
 test_cases/
 test_cases/*.py
+
+.pytest_cache/
+pytest.ini
 
 # --- Docs ---
 docs/
