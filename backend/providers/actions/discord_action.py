@@ -30,7 +30,7 @@ class DiscordAction(BaseAction):
             response.raise_for_status()
 
             return {
-                "success": "success",
+                "status": "success",
                 "delivered_message": message
             }
         
