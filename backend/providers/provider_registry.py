@@ -7,9 +7,13 @@ from typing import Dict, Type
 from backend.providers.actions.base_action import BaseAction
 from backend.providers.triggers.base_trigger import BaseTrigger
 
+from backend.providers.actions.http_action import HTTPRequestAction
+from backend.providers.actions.discord_action import DiscordAction
 from backend.providers.actions.logger_action import LoggerAction
 from backend.providers.actions.formatter_action import TextFormatterAction
 from backend.providers.triggers.webhook_trigger import WebhookTrigger
+from backend.providers.triggers.cron_trigger import CronTrigger
+
 
 class ProviderRegistry:
     """
@@ -50,8 +54,11 @@ class ProviderRegistry:
         # Actions
         cls.register_action("LOGGER", LoggerAction)
         cls.register_action("TEXT_FORMATTER", TextFormatterAction)
+        cls.register_action("HTTP_REQUEST", HTTPRequestAction)  
+        cls.register_action("DISCORD", DiscordAction)
         
         # Triggers
         cls.register_trigger("WEBHOOK", WebhookTrigger)
+        cls.register_trigger("CRON", CronTrigger)
     
     

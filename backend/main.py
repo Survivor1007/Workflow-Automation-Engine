@@ -4,6 +4,7 @@ from contextlib import asynccontextmanager
 
 from backend.database.database import engine, Base
 
+from backend.engine.scheduler import scheduler, sync_scheduler
 
 # Import Engine & Providers
 from backend.providers.provider_registry import ProviderRegistry
@@ -28,8 +29,14 @@ async def lifespan(app: FastAPI):
       ProviderRegistry.register_core_providers()
       print("Core Providers successfully registered.")
 
+      # Start Background Scheduler
+      sync_scheduler()
+      scheduler.start()
+
       yield
 
+      # Shutdown gracefully
+      scheduler.shutdown()
       print("Shutting down engine...")
 
 
