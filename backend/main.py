@@ -26,7 +26,7 @@ async def lifespan(app: FastAPI):
       print("Initializing Workflow Automation Engine...")
 
       # Load core providers into the memory
-      ProviderRegistry.register_core_providers()
+      ProviderRegistry.discover_and_register()
       print("Core Providers successfully registered.")
 
       # Start Background Scheduler

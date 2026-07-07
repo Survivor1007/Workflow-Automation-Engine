@@ -1,22 +1,32 @@
 from typing import Dict, Any
-from backend.providers.triggers.base_trigger import BaseTrigger
+from pydantic import BaseModel
+
+from backend.providers.base import BaseTrigger, ProviderMetadata
+
+class WebhookConfig(BaseModel):
+    # Webhooks typically don't have complex configurations per step, 
+    # as the routing is handled by the URL endpoint itself.
+    # We use an empty model to satisfy the BaseProvider contract.
+    pass
+
 
 class WebhookTrigger(BaseTrigger):
     """
-    Translates inbound raw HTTP webhook requests into the primary context payload.
+    A passive provider class for Webhook triggers.
+    The actual HTTP ingestion happens in the FastAPI route layer.
+    This class exists to fulfill the registry contract and pass payload data into the context.
     """
-    
-    async def execute(self, **kwargs) -> Dict[str, Any]:
-        # FastApi routes will pass the HTTP request components via kwargs
-        payload = kwargs.get("payload", {})
-        headers = kwargs.get("headers", {})
-        query_params = kwargs.get("query_params", {})
+    metadata = ProviderMetadata(
+        name="webhook",
+        type="TRIGGER",
+        display_name="Webhook Trigger",
+        version="1.0",
+        category="Network",
+        description="Trigger a workflow via an incoming HTTP Webhook.",
+        icon="globe"
+    )
+    config_model = WebhookConfig
 
-        # We return a structured dictionary that becomes the `{{ trigger }}` 
-        # namespace in the shared data bus.
-        return {
-            "body": payload,
-            "headers": headers,
-            "query": query_params,
-            "event_type": "http_webhook"
-        }
+    async def execute(self, context: Dict[str, Any]) -> Dict[str, Any]:
+        # Triggers pass their payload forward into the execution context bus.
+        return context
