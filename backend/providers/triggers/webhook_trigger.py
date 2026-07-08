@@ -1,9 +1,9 @@
 from typing import Dict, Any
 from pydantic import BaseModel
 
-from backend.providers.base import BaseTrigger, ProviderMetadata
+from backend.providers.base import BaseTrigger, ProviderMetadata, BaseStepConfig
 
-class WebhookConfig(BaseModel):
+class WebhookConfig(BaseStepConfig):
     # Webhooks typically don't have complex configurations per step, 
     # as the routing is handled by the URL endpoint itself.
     # We use an empty model to satisfy the BaseProvider contract.

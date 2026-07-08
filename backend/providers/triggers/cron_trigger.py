@@ -5,9 +5,9 @@
 from pydantic import BaseModel, Field
 from typing import Dict, Any
 
-from backend.providers.base import BaseTrigger, ProviderMetadata
+from backend.providers.base import BaseTrigger, ProviderMetadata, BaseStepConfig
 
-class CronConfig(BaseModel):
+class CronConfig(BaseStepConfig):
     cron_expression: str = Field(..., description="Standard cron expression (e.g., '*/5 * * * * *')")
 
 

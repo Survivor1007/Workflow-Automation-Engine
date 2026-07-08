@@ -33,6 +33,7 @@ Use this map to navigate the implementation, engineering decisions, and system b
 * [ADR-001: Strict Linear Workflows](decisions/ADR-001-linear-workflows.md)
 * [ADR-002: Local-First Storage with SQLite](decisions/ADR-002-sqlite-first.md)
 * [ADR-003: Safe Templating via Jinja2](decisions/ADR-003-jinja2-templating.md)
+* [ADR-004: Automatic Provider Discovery & Plugin Architecture](decisions/ADR-004-automatic-provider-discovery-and-plugin-architecture.md)
 
 ---
 

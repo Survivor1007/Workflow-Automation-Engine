@@ -1,9 +1,9 @@
 from typing import Dict, Any
 from pydantic import Field, BaseModel
 
-from backend.providers.base import BaseAction, ProviderMetadata
+from backend.providers.base import BaseAction, ProviderMetadata, BaseStepConfig
 
-class TextFormatterConfig(BaseModel):
+class TextFormatterConfig(BaseStepConfig):
     text: str = Field(..., description="The text to format. Jinja2 templating allowed.")
     tranform: str = Field("uppercase", description="Transformation type: 'uppercase', 'lowercase' or 'capitalize' ")
 

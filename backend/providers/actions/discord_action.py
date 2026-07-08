@@ -7,10 +7,10 @@ from typing import Dict, Any
 from pydantic import BaseModel, Field
 
 from backend.providers.actions.base_action import BaseAction
-from backend.providers.base import ProviderMetadata
+from backend.providers.base import ProviderMetadata, BaseStepConfig
 
 # 1. Define specific configuration schema for this provider
-class DiscordConfig(BaseModel):
+class DiscordConfig(BaseStepConfig):
     webhook_url: str = Field(..., description="The Discord Webhook URL", format="uri")
     message: str = Field(..., description="The message payload to send to discord")
     username: str = Field("Workflow Engine Bot", description="Override the bot's username")

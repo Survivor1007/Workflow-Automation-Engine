@@ -5,9 +5,9 @@
 from pydantic import Field, BaseModel
 import httpx
 from typing import Dict, Any
-from backend.providers.base import BaseAction, ProviderMetadata
+from backend.providers.base import BaseAction, ProviderMetadata, BaseStepConfig
 
-class HTTPRequestConfig(BaseModel):
+class HTTPRequestConfig(BaseStepConfig):
     url: str = Field(..., description="The target URL for the request", format="uri")
     method: str = Field("GET", description="HTTP Method (GET, POST, PUT, PATCH, DELETE)")
     headers: Dict[str, str] = Field(default_factory=dict, description="Key-value pairs for HTTP headers")

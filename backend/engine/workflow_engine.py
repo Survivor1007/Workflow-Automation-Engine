@@ -2,10 +2,12 @@
 # File: backend/engine/workflow_engine.py
 # Function: Main orchestration area of the system
 # ---
+import time
 import traceback
 from sqlalchemy.orm import Session
 from typing import  Dict, Any
 
+from backend.core.logger import SystemLogger
 from backend.database.models.workflow import Workflow
 from backend.database.models.workflow_step import WorkflowStep
 from backend.engine.context_manager import ContextManager
@@ -93,7 +95,18 @@ class WorkflowEngine:
                     
                     # Merge rendered config into context so the provider can access its specific settings
                     step_execution_context = {**current_context, "config": rendered_config}
-                    output_payload = await action_provider.execute(step_execution_context)
+
+                    # 1. Start Execution Time
+                    start_time = time.time()
+
+                    # 2. Call the wrapper, NOT execute() directly!
+                    output_payload = await action_provider.run_with_policies(step_execution_context)
+
+                    # 3. Calculate duration
+                    duration_ms = round((time.time() - start_time) * 1000, 2)
+                    
+                    # 4. Log the success with metrics
+                    SystemLogger.workflow("INFO", workflow_id, f"Step {step.step_order} ({step.node_provider}) completed.", metadata={"duration_ms": duration_ms})
 
                     # Append isolated step output to the universal data bus
                     context_manager.add_step_output(f"step_{step.step_order}", output_payload)
@@ -106,6 +119,9 @@ class WorkflowEngine:
                 self.db.rollback()
                 
                 error_details = f"{str(e)}\n{traceback.format_exc()}"
+
+                SystemLogger.workflow("ERROR", workflow_id, f"Workflow failed at step {step.step_order}", metadata={"error": str(e)})
+                SystemLogger.engine("ERROR", "Fail-fast abort triggered.", metadata={"workflow_id": workflow_id, "step_id": step.id})
                 
                 if exec_step:
                     tracker.update_step_status(exec_step, "FAILED", error_message=error_details)

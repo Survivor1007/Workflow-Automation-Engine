@@ -7,10 +7,10 @@ import json
 from datetime import datetime, timezone
 from typing import Dict, Any
 
-from backend.providers.base import BaseAction, ProviderMetadata
+from backend.providers.base import BaseAction, ProviderMetadata, BaseStepConfig
 from backend.core.constants import LOGS_DIR, PROVIDER_LOG_PATH
 
-class LoggerConfig(BaseModel):
+class LoggerConfig(BaseStepConfig):
     message: str = Field("No message provided", description="The message to log. Jinja templating allowed.")
     level: str = Field("INFO", description="Log level (INFO, WARNING, ERROR, DEBUG)")
     include_context: bool = Field(False, description="Whether to dump the entire context into the log")
