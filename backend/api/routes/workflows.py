@@ -8,8 +8,17 @@ from backend.database.models.workflow_step import WorkflowStep
 from backend.database.schemas.workflow import WorkflowCreate, StepCreate
 from backend.engine.workflow_engine import WorkflowEngine
 from backend.providers.triggers.webhook_trigger import WebhookTrigger
+from backend.providers.provider_registry import ProviderRegistry
 
 router = APIRouter(tags=["Workflows"])
+
+@router.get("/providers/")
+def get_providers():
+    """
+    Returns all dynamically discovered providers,
+    along with their metadata and Pydantic UI Schema.
+    """
+    return ProviderRegistry.get_all_metadata()
 
 @router.post("/workflows/")
 def create_workflow(workflow: WorkflowCreate, db: Session = Depends(get_db)):
