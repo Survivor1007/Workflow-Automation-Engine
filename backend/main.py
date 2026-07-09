@@ -1,16 +1,19 @@
+# ---
+# File: backend/main.py
+# ---
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 
 from backend.database.database import engine, Base
 
-from backend.engine.scheduler import scheduler, sync_scheduler
-
 # Import Engine & Providers
 from backend.providers.provider_registry import ProviderRegistry
 from backend.engine.workflow_engine import ProviderRegistry
 from backend.providers.actions.formatter_action import TextFormatterAction
 from backend.providers.actions.logger_action import LoggerAction
+from backend.services.scheduler_service import SchedulerService
 
 # Register the actions so the Engine knows how to execute them
 ProviderRegistry.register_action("TEXT_FORMATTER", TextFormatterAction)
@@ -30,13 +33,13 @@ async def lifespan(app: FastAPI):
       print("Core Providers successfully registered.")
 
       # Start Background Scheduler
-      sync_scheduler()
-      scheduler.start()
+      SchedulerService.start()
+      SchedulerService.sync_jobs()
 
       yield
 
       # Shutdown gracefully
-      scheduler.shutdown()
+      SchedulerService.shutdown()
       print("Shutting down engine...")
 
 
