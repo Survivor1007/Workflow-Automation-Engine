@@ -9,14 +9,6 @@ from typing import Dict, Type
 
 from backend.providers.base import BaseAction, BaseTrigger
 
-from backend.providers.actions.http_action import HTTPRequestAction
-from backend.providers.actions.discord_action import DiscordAction
-from backend.providers.actions.logger_action import LoggerAction
-from backend.providers.actions.formatter_action import TextFormatterAction
-from backend.providers.triggers.webhook_trigger import WebhookTrigger
-from backend.providers.triggers.cron_trigger import CronTrigger
-
-
 class ProviderRegistry:
     """
     A centralized regsitry mapping string provider names from the database
@@ -44,7 +36,7 @@ class ProviderRegistry:
     @classmethod
     def get_trigger(cls, name:str) -> BaseTrigger:
         if name not in cls._triggers:
-            raise ValueError(f"Action Provider: `{name}` is not  registered in the system.")
+            raise ValueError(f"Trigger Provider: `{name}` is not  registered in the system.")
         return cls._triggers[name]()
     
 
@@ -82,23 +74,6 @@ class ProviderRegistry:
 
             except Exception as e:
                 print(f"Warning: Failed to import module {module_name}. Error: {e}")
-
-
-    # # --- Bootstrapping ---
-    # @classmethod
-    # def register_core_providers(cls) -> None:
-    #     """
-    #     Registers all native providers. Call this once during application startup.
-    #     """
-    #     # Actions
-    #     cls.register_action("LOGGER", LoggerAction)
-    #     cls.register_action("TEXT_FORMATTER", TextFormatterAction)
-    #     cls.register_action("HTTP_REQUEST", HTTPRequestAction)  
-    #     cls.register_action("DISCORD", DiscordAction)
-        
-    #     # Triggers
-    #     cls.register_trigger("WEBHOOK", WebhookTrigger)
-    #     cls.register_trigger("CRON", CronTrigger)
 
     @classmethod
     def get_all_metadata(cls) -> list:

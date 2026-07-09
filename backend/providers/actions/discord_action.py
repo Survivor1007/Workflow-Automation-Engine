@@ -45,7 +45,7 @@ class DiscordAction(BaseAction):
         
         payload = {
             "content": config.message,
-            "username": config.get("username", "Workflow Engine bot")
+            "username": config.username or "Workflow Engine Bot"
         }
 
         async with httpx.AsyncClient() as client:

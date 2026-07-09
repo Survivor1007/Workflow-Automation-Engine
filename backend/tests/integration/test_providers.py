@@ -5,6 +5,8 @@
 import pytest
 from unittest.mock import patch, AsyncMock, MagicMock
 
+from pydantic import ValidationError
+
 # Import providers
 from backend.providers.actions.http_action import HTTPRequestAction
 from backend.providers.actions.discord_action import DiscordAction
@@ -54,7 +56,7 @@ async def test_http_request_action_missing_url():
     action = HTTPRequestAction()
 
     # Verify fail-fast constraint when misconfigured
-    with pytest.raises(ValueError, match="Missing required 'url'"):
+    with pytest.raises(ValidationError, match="Field required"):
         await action.execute({"config": {}})
     
 

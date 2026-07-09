@@ -25,8 +25,8 @@ class BaseStepConfig(BaseModel):
 class BaseProvider(ABC):
     """The ultimate base class for all plugins (Actions and Triggers)."""
     # ClassVar ensure that these exist on the class itself, not just instances
-    metadata: ClassVar[ProviderMetadata]
-    config_model: ClassVar[Type[BaseModel]]
+    metadata: ClassVar[ProviderMetadata] # class-level info
+    config_model: ClassVar[Type[BaseModel]] # Provider specific Schema
 
 class BaseAction(BaseProvider):
     @abstractmethod

@@ -1,6 +1,8 @@
+# ---
+# File: backend/api/routes/workflows.py
+# ---
 from fastapi import Depends, HTTPException, APIRouter, Request
 from sqlalchemy.orm import Session
-from typing import Dict, Any
 
 from backend.database.database import get_db
 from backend.database.models.workflow import Workflow
@@ -71,3 +73,18 @@ async def webhook_trigger(workflow_id: int, request: Request, db: Session = Depe
 
     return {"status": "Workflow triggered and execution sequence completed."}
 
+# --- To allow frontend to inspect what happened. Critical for achieving `Observability` ---
+
+@router.get("/workflows/{workflow_id}/executions/")
+def get_workflow_executions(workflow_id: int, db: Session = Depends(get_db)):
+    """Fetch history of all runs for a specific workflow."""
+    from backend.database.models.workflow_execution import WorkflowExecution
+    executions = db.query(WorkflowExecution).filter(WorkflowExecution.workflow_id == workflow_id).all()
+    return executions
+
+@router.get("/executions/{execution_id}/steps/")
+def get_execution_steps(execution_id: int, db: Session = Depends(get_db)):
+    """Inspect detailed step results for a specific execution."""
+    from backend.database.models.workflow_execution_step import WorkflowExecutionStep
+    steps = db.query(WorkflowExecutionStep).filter(WorkflowExecutionStep.execution_id == execution_id).all()
+    return steps
