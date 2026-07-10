@@ -26,6 +26,8 @@ workflow_engine.db
 frontend/node_modules/
 frontend/dist/
 frontend/.vite/
+npm-debug.log
+fronted/nginx.conf
 
 # --- IDE & OS metadata ---
 .vscode/
@@ -34,6 +36,7 @@ frontend/.vite/
 
 # --- Environment Variables ---
 .env
+.env.example
 
 # --- Test Cases ---
 test_cases/
@@ -45,3 +48,7 @@ pytest.ini
 # --- Docs ---
 docs/
 docs/*.md
+
+backend/Dockerfile
+frontend/Dockerfile
+.dockerignore

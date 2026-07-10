@@ -16,3 +16,12 @@ services:
      - PYTHONUNBUFFERED=1
      - PYTHONPATH=/app
      - DATABASE_URL=${DATABASE_URL}
+  
+  frontend:
+    container_name: we-frontend
+    build: 
+      context: ./frontend
+    ports:
+     - "5173:80"
+    depends_on:
+      - backend
