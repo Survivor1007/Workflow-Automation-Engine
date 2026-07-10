@@ -17,7 +17,7 @@ class SchedulerService:
     """
     Manages the lifecycle of cron-triggered  workflows using APScheduler.
     """
-    _scheduler = AsyncIOScheduler
+    _scheduler = AsyncIOScheduler()
 
     @classmethod
     def start(cls):
