@@ -1,7 +1,7 @@
 # ---
 # File: backend/api/routes/workflows.py
 # ---
-from fastapi import Depends, HTTPException, APIRouter, Request
+from fastapi import Depends, HTTPException, APIRouter, Request, Query
 from sqlalchemy.orm import Session
 
 from backend.database.database import get_db
@@ -88,3 +88,17 @@ def get_execution_steps(execution_id: int, db: Session = Depends(get_db)):
     from backend.database.models.workflow_execution_step import WorkflowExecutionStep
     steps = db.query(WorkflowExecutionStep).filter(WorkflowExecutionStep.execution_id == execution_id).all()
     return steps
+
+@router.get("/workflows/")
+def get_workflows(db:Session = Depends(get_db)):
+    """Fetch history of all workflows."""
+    from backend.database.models.workflow import Workflow
+    workflows = db.query(Workflow).all()
+    return workflows
+
+@router.get("/executions")
+def get_executions(db: Session = Depends(get_db), limit: int = Query(default=10, lt=30)):
+    """Fetch history of executions."""
+    from backend.database.models.workflow_execution import WorkflowExecution
+    executions = db.query(WorkflowExecution).limit(limit).all()
+    return executions
