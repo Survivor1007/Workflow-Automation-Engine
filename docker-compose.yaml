@@ -23,5 +23,7 @@ services:
       context: ./frontend
     ports:
      - "5173:80"
+    environment:
+      - VITE_API_URL=${VITE_API_URL}
     depends_on:
       - backend
