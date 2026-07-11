@@ -4,6 +4,7 @@ import Dashboard from "../pages/Dashboard";
 import Workflows from "../pages/Workflows";
 import Executions from "../pages/Executions";
 import Providers from "../pages/Providers";
+import WorkflowEditor from "../pages/WorkflowEditor";
 
 export const router = createBrowserRouter([
   {
@@ -12,7 +13,7 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <Dashboard /> },
       { path: "workflows", element: <Workflows /> },
-      // { path: "workflows/:id", element: <WorkflowEditor /> }, // We will build this next
+      { path: "workflows/:id", element: <WorkflowEditor /> },
       { path: "executions", element: <Executions /> },
       { path: "providers", element: <Providers /> },
     ],

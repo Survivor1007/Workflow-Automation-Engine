@@ -18,7 +18,7 @@ export default function Dashboard() {
 
   // Derived metrics from live data
   const totalWorkflows = workflows?.length || 0;
-  const activeWorkflows = workflows?.filter(w => w.is_active).length || 0;
+  // const activeWorkflows = workflows?.filter(w => w.is_active).length || 0;
   const totalExecutions = executions?.length || 0;
   const failedExecutions = executions?.filter(e => e.status === "FAILED").length || 0;
   
