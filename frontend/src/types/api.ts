@@ -18,9 +18,25 @@ export interface ExecutionSummary {
 }
 
 // We'll expand this later when we build the Provider UI
-export interface ProviderSchema {
-    provider_id: string;
+// export interface ProviderSchema {
+//     provider_id: string;
+//     name: string;
+//     type: "trigger" | "action";
+//     schema: any; 
+// }
+
+export interface SchemaField {
     name: string;
-    type: "trigger" | "action";
-    schema: any; 
+    type: "string" | "textarea" | "integer" | "boolean";
+    title: string;
+    description?: string;
+    required?: boolean;
+    default?: any;
+}
+
+export interface ProviderSchema {
+  provider_id: string;
+  name: string;
+  type: "trigger" | "action";
+  fields: SchemaField[];
 }
