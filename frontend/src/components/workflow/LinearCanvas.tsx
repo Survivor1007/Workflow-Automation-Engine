@@ -2,22 +2,13 @@
 File: /frontend/src/components/workflow/LinearCanvas.tsx
 Function: This component reads the array of steps from Zustand and renders them with the vertical connection lines characteristic of ADR-001 (Linear Workflows).
 */
-import { Plus } from "lucide-react";
+
 import { useEditorStore } from "../../store/editorStore";
 import { StepNode } from "./StepNode";
 
 export function LinearCanvas() {
-  const { steps, addStep } = useEditorStore();
+  const { steps } = useEditorStore();
 
-  // Temporary mock function to add a step until we build the Provider Sidebar
-  const handleAddMockStep = () => {
-    addStep({
-      provider_id: "http_request",
-      name: "Outbound HTTP Action",
-      type: "action",
-      config: {}
-    });
-  };
 
   return (
     <div className="flex flex-col items-center py-8 space-y-2">
@@ -37,16 +28,7 @@ export function LinearCanvas() {
           </div>
         ))
       )}
-
-      {/* Add Step Button */}
-      <div className="pt-6">
-        <button 
-          onClick={handleAddMockStep}
-          className="flex items-center px-4 py-2 text-sm font-medium text-zinc-600 bg-white border border-zinc-200 rounded-full hover:bg-zinc-50 hover:text-zinc-900 transition-colors shadow-sm"
-        >
-          <Plus className="w-4 h-4 mr-2" /> Add Step
-        </button>
-      </div>
+      
     </div>
   );
 }
