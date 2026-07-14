@@ -5,6 +5,7 @@ import Workflows from "../pages/Workflows";
 import Executions from "../pages/Executions";
 import Providers from "../pages/Providers";
 import WorkflowEditor from "../pages/WorkflowEditor";
+import ExecutionInspector from "../pages/ExecutionInspector";
 
 export const router = createBrowserRouter([
   {
@@ -16,6 +17,7 @@ export const router = createBrowserRouter([
       { path: "workflows/:id", element: <WorkflowEditor /> },
       { path: "executions", element: <Executions /> },
       { path: "providers", element: <Providers /> },
+      { path: "executions/:id", element: <ExecutionInspector /> },
     ],
   },
 ]);

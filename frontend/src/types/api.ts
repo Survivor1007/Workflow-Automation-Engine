@@ -40,3 +40,25 @@ export interface ProviderSchema {
   type: "trigger" | "action";
   fields: SchemaField[];
 }
+
+export interface StepExecutionTrace {
+  step_id: string;
+  provider_id: string;
+  name: string;
+  status: ExecutionStatus;
+  duration_ms: number;
+  input_context: Record<string, any>;
+  output_context: Record<string, any> | null;
+  error_message: string | null;
+  logs: string[];
+}
+
+export interface DetailedExecution {
+  id: string;
+  workflow_id: string;
+  workflow_name: string;
+  global_status: ExecutionStatus;
+  total_duration_ms: number;
+  started_at: string;
+  steps: StepExecutionTrace[];
+}
