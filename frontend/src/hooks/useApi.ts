@@ -41,14 +41,39 @@ export const useSaveWorkflow = () => {
   
   return useMutation({
     mutationFn: async ({ id, payload }: { id: string; payload: any }) => {
-      // If "new", POST to create. Otherwise, PUT to update.
+      let workflowId = id;
+
+      // STEP 1: Save the Workflow Metadata (Name, Status)
       if (id === "new") {
-        return (await apiClient.post("/workflows", payload)).data;
+        // Create new workflow
+        const wfResponse = await apiClient.post("/workflows/", { 
+          name: payload.name, 
+          is_active: payload.is_active 
+        });
+        workflowId = wfResponse.data.id;
+      } else {
+        // Update existing workflow
+        await apiClient.put(`/workflows/${id}`, { 
+          name: payload.name, 
+          is_active: payload.is_active 
+        });
       }
-      return (await apiClient.put(`/workflows/${id}`, payload)).data;
+
+      // STEP 2: Bulk Sync the Steps
+      // Map frontend Zustand state to backend StepCreate schema
+      const stepsPayload = payload.steps.map((step: any, index: number) => ({
+        step_order: index,
+        step_type: step.type.toUpperCase(), // "TRIGGER" or "ACTION"
+        node_provider: step.provider_id,
+        config_json: step.config
+      }));
+
+
+      await apiClient.put(`/workflows/${workflowId}/steps/`, stepsPayload);
+
+      return { id: workflowId };
     },
     onSuccess: () => {
-      // Invalidate the workflows list so the Dashboard updates instantly
       queryClient.invalidateQueries({ queryKey: ["workflows"] });
     },
   });

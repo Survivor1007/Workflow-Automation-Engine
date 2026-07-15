@@ -36,7 +36,8 @@ export default function WorkflowEditor() {
       steps: steps.map((step, index) => ({
         step_order: index,
         provider_id: step.provider_id,
-        config: step.config
+        config: step.config,
+        type: step.type,
       }))
     };
 
