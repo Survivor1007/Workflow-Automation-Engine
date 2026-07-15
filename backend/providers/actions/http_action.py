@@ -2,7 +2,7 @@
 # File: backend/providers/actions/http_action.py
 # Function: This is a generic outbound webhook node.
 # ---
-from pydantic import Field, BaseModel
+from pydantic import Field
 import httpx
 from typing import Dict, Any
 from backend.providers.base import BaseAction, ProviderMetadata, BaseStepConfig

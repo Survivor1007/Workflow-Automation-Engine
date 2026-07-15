@@ -3,6 +3,7 @@
 # ---
 from fastapi import Depends, HTTPException, APIRouter, Request, Query
 from sqlalchemy.orm import Session
+from typing import List
 
 from backend.database.database import get_db
 from backend.database.models.workflow import Workflow
@@ -102,3 +103,46 @@ def get_executions(db: Session = Depends(get_db), limit: int = Query(default=10,
     from backend.database.models.workflow_execution import WorkflowExecution
     executions = db.query(WorkflowExecution).limit(limit).all()
     return executions
+
+@router.put("/workflows/{workflow_id}")
+def update_workflow(workflow_id: int, workflow: WorkflowCreate, db: Session = Depends(get_db)):
+    """Updates an existing workflow's name and active status."""
+    db_workflow = db.query(Workflow).filter(Workflow.id == workflow_id).first()
+    if not db_workflow:
+        raise HTTPException(status_code=404, detail="Workflow not found")
+    
+    db_workflow.name = workflow.name
+    db_workflow.is_active = workflow.is_active
+    db.commit()
+    db.refresh(db_workflow)
+    return {"id": db_workflow.id, "name": db_workflow.name, "status": "updated"}
+
+@router.put("/workflows/{workflow_id}/steps/")
+def sync_workflow_steps(workflow_id: int, steps: List[StepCreate], db: Session = Depends(get_db)):
+    """
+    Bulk replaces all steps for a workflow. 
+    This is used by the UI's 'Save Pipeline' feature to ensure transactional safety.
+    """
+    workflow = db.query(Workflow).filter(Workflow.id == workflow_id).first()
+    if not workflow:
+        raise HTTPException(status_code=404, detail="Workflow not found")
+    
+    # 1. Delete existing steps for this workflow
+    db.query(WorkflowStep).filter(WorkflowStep.workflow_id == workflow_id).delete()
+    
+    # 2. Prepare the new steps
+    new_steps = [
+        WorkflowStep(
+            workflow_id=workflow_id,
+            step_order=step.step_order,
+            step_type=step.step_type,
+            node_provider=step.node_provider,
+            config_json=step.config_json
+        ) for step in steps
+    ]
+    
+    # 3. Insert new steps and commit transactionally
+    db.add_all(new_steps)
+    db.commit()
+    
+    return {"status": "Steps synchronized successfully", "total_steps": len(new_steps)}

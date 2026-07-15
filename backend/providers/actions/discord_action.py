@@ -4,10 +4,9 @@
 # ---
 import httpx
 from typing import Dict, Any
-from pydantic import BaseModel, Field
+from pydantic import  Field
 
-from backend.providers.actions.base_action import BaseAction
-from backend.providers.base import ProviderMetadata, BaseStepConfig
+from backend.providers.base import ProviderMetadata, BaseStepConfig, BaseAction
 
 # 1. Define specific configuration schema for this provider
 class DiscordConfig(BaseStepConfig):
@@ -36,12 +35,6 @@ class DiscordAction(BaseAction):
 
     async def execute(self, context: Dict[str, Any]) -> Dict[str, Any]: 
         config = self.config_model(**context.get("config", {}))
-
-        # webhook_url = config.get("webhook_url")
-        # message = config.get("message")
-
-        # if not webhook_url or not message:
-        #     raise ValueError("Discord action failed: Required both `webhook_url` and `message`.")
         
         payload = {
             "content": config.message,
