@@ -17,14 +17,6 @@ export interface ExecutionSummary {
     started_at: string;
 }
 
-// We'll expand this later when we build the Provider UI
-// export interface ProviderSchema {
-//     provider_id: string;
-//     name: string;
-//     type: "trigger" | "action";
-//     schema: any; 
-// }
-
 export interface SchemaField {
     name: string;
     type: "string" | "textarea" | "integer" | "boolean";
@@ -34,12 +26,12 @@ export interface SchemaField {
     default?: any;
 }
 
-export interface ProviderSchema {
-  provider_id: string;
-  name: string;
-  type: "trigger" | "action";
-  fields: SchemaField[];
-}
+// export interface ProviderSchema {
+//   provider_id: string;
+//   name: string;
+//   type: "trigger" | "action";
+//   fields: SchemaField[];
+// }
 
 export interface StepExecutionTrace {
   step_id: string;
@@ -61,4 +53,36 @@ export interface DetailedExecution {
   total_duration_ms: number;
   started_at: string;
   steps: StepExecutionTrace[];
+}
+
+export interface JsonSchemaProperty {
+  type: string;
+  title?: string;
+  description?: string;
+  default?: any;
+  minimum?: number;
+  maximum?: number;
+  exclusiveMinimum?: number;
+}
+
+export interface ProviderMetadata {
+  name: string;
+  type: "TRIGGER" | "ACTION";
+  display_name: string;
+  version: string;
+  category: string;
+  description: string;
+  icon: string;
+}
+
+export interface ProviderSchema {
+  id: string; // e.g., "TEXT_FORMATTER"
+  type: "TRIGGER" | "ACTION";
+  metadata: ProviderMetadata;
+  ui_schema: {
+    type: string;
+    title: string;
+    properties: Record<string, JsonSchemaProperty>;
+    required?: string[];
+  };
 }

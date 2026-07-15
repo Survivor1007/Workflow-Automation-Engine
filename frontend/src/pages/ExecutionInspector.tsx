@@ -4,63 +4,36 @@
 // ---
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Terminal } from "lucide-react";
+import { ArrowLeft, Terminal, Loader2 } from "lucide-react";
 import { ExecutionTimeline } from "../components/execution/ExecutionTimeline";
 import { Badge } from "../components/common/Badge";
-import { type DetailedExecution } from "../types/api";
+import { useExecutionTrace } from "../hooks/useApi";
 
-// --- MOCK TRACE DATA (Simulating a failed execution trace) ---
-const mockTrace: DetailedExecution = {
-  id: "ex_8902",
-  workflow_id: "wf_123",
-  workflow_name: "Discord Alerts",
-  global_status: "FAILED",
-  total_duration_ms: 1250,
-  started_at: new Date().toISOString(),
-  steps: [
-    {
-      step_id: "step_1", provider_id: "webhook_trigger", name: "Incoming Webhook", status: "SUCCESS", duration_ms: 45,
-      input_context: { headers: { "content-type": "application/json" }, body: { user: "Alice", action: "signup" } },
-      output_context: { trigger_data: { user: "Alice", action: "signup" } }, error_message: null,
-      logs: ["[INFO] Webhook payload received and validated."]
-    },
-    {
-      step_id: "step_2", provider_id: "text_formatter", name: "Format Message", status: "SUCCESS", duration_ms: 5,
-      input_context: { template: "New user signup: {{ trigger.body.user }}", variables: { trigger: { body: { user: "Alice" } } } },
-      output_context: { formatted_text: "New user signup: Alice" }, error_message: null,
-      logs: ["[INFO] Jinja2 template rendered successfully."]
-    },
-    {
-      step_id: "step_3", provider_id: "discord_action", name: "Send Discord Ping", status: "FAILED", duration_ms: 1200,
-      input_context: { webhook_url: "https://discord.com/api/webhooks/invalid", message: "New user signup: Alice", retries: 3 },
-      output_context: null, error_message: "Max retries exceeded. HTTP 401 Unauthorized.",
-      logs: [
-        "[INFO] Attempting POST to Discord API (Attempt 1/3)",
-        "[WARN] Received HTTP 401. Retrying in 1s...",
-        "[INFO] Attempting POST to Discord API (Attempt 2/3)",
-        "[WARN] Received HTTP 401. Retrying in 2s...",
-        "[ERROR] Execution halted. Provider failed."
-      ]
-    }
-  ]
-};
 
 export default function ExecutionInspector() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [trace, setTrace] = useState<DetailedExecution | null>(null);
   const [selectedStepId, setSelectedStepId] = useState<string | null>(null);
 
-  useEffect(() => {
-    // Simulate API Fetch
-    setTrace(mockTrace);
-    setSelectedStepId(mockTrace.steps[0].step_id);
-  }, [id]);
+  // Fetch the rea trace from the SQLite database
+  const { data: trace, isLoading, isError } = useExecutionTrace(id as string);
 
-  if (!trace) return <div className="p-8 text-zinc-500">Loading trace...</div>;
+  useEffect(() => {
+    // Automatically select the first step when data loads
+    if (trace && trace.steps.length > 0 && !selectedStepId) {
+      setSelectedStepId(trace.steps[0].step_id);
+    }
+  }, [trace, selectedStepId]);
+
+  if (isLoading) {
+    return <div className="p-8 text-zinc-500 flex items-center"><Loader2 className="animate-spin w-5 h-5 mr-3"/> Fetching trace from engine...</div>;
+  }
+
+  if (isError || !trace) {
+    return <div className="p-8 text-red-500">Failed to load execution trace. It may have been deleted or the engine is offline.</div>;
+  }
 
   const activeStep = trace.steps.find(s => s.step_id === selectedStepId);
-
   return (
     <div className="flex flex-col h-full bg-zinc-50 overflow-hidden">
       
