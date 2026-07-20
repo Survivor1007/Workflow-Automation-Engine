@@ -146,3 +146,60 @@ def sync_workflow_steps(workflow_id: int, steps: List[StepCreate], db: Session =
     db.commit()
     
     return {"status": "Steps synchronized successfully", "total_steps": len(new_steps)}
+
+@router.get("/executions/{execution_id}")
+def get_execution_details(execution_id: int, db: Session = Depends(get_db)):
+    """
+    Fetch a detailed trace of a specific execution.
+    Formats the DB relational data into the exact JSON schema expected by the frontend Inspector.
+    """
+    from backend.database.models.workflow_execution import WorkflowExecution
+
+    # 1. Fetch the main execution record
+    execution = db.query(WorkflowExecution).filter(WorkflowExecution.id == execution_id).first()
+    if not execution:
+        raise HTTPException(status_code=404, detail="Execution not found")
+
+    # 2. Fetch the parent workflow for UI display metadata
+    workflow = db.query(Workflow).filter(Workflow.id == execution.workflow_id).first()
+
+    # 3. Calculate total runtime duration
+    duration_ms = 0
+    if execution.completed_at and execution.started_at:
+        # If dates are timezone-aware, ensure safe subtraction
+        duration_ms = int((execution.completed_at - execution.started_at).total_seconds() * 1000)
+
+    # 4. Map the raw DB steps into the 'StepExecutionTrace' format the UI expects
+    formatted_steps = []
+    
+    # execution.execution_steps works because you defined the SQLAlchemy relationship!
+    for step_exec in execution.execution_steps:
+        # Retrieve the original workflow step to get the provider (e.g., 'discord_action')
+        orig_step = db.query(WorkflowStep).filter(WorkflowStep.id == step_exec.step_id).first()
+        provider_id = orig_step.node_provider if orig_step else "unknown"
+        
+        # Format the provider name cleanly for the UI (e.g., 'discord_action' -> 'Discord Action')
+        display_name = provider_id.replace("_", " ").title()
+
+        formatted_steps.append({
+            "step_id": str(step_exec.id), 
+            "provider_id": provider_id,
+            "name": display_name,
+            "status": step_exec.status,
+            "duration_ms": 0, # Placeholder unless you explicitly track per-step timing
+            "input_context": step_exec.input_payload or {},
+            "output_context": step_exec.output_payload or {},
+            "error_message": step_exec.error_message,
+            "logs": [] # Future: You could read the .jsonl file here and append the matching logs!
+        })
+
+    # 5. Return the full payload matching the frontend's `DetailedExecution` interface
+    return {
+        "id": str(execution.id),
+        "workflow_id": str(execution.workflow_id),
+        "workflow_name": workflow.name if workflow else f"Workflow {execution.workflow_id}",
+        "global_status": execution.status,
+        "total_duration_ms": duration_ms,
+        "started_at": execution.started_at.isoformat() if execution.started_at else None,
+        "steps": formatted_steps
+    }
