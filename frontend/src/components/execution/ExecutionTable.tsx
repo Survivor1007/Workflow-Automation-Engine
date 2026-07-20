@@ -1,6 +1,7 @@
 import { Badge, type ExecutionStatus } from "../common/Badge";
 import { Button } from "../common/Button";
 import { Search } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 // Temporary mock type until we build the TanStack API layer
 export type MockExecution = {
@@ -17,6 +18,8 @@ interface ExecutionTableProps {
 }
 
 export function ExecutionTable({ executions }: ExecutionTableProps) {
+  const navigate = useNavigate();
+
   return (
     <div className="w-full overflow-x-auto">
       <table className="w-full text-left text-sm whitespace-nowrap">
@@ -31,21 +34,30 @@ export function ExecutionTable({ executions }: ExecutionTableProps) {
           </tr>
         </thead>
         <tbody className="divide-y divide-zinc-200 bg-white">
-          {executions.map((exe) => (
-            <tr key={exe.id} className="hover:bg-zinc-50 transition-colors">
-              <td className="px-4 py-3 font-medium text-zinc-900">{exe.workflowName}</td>
-              <td className="px-4 py-3 text-zinc-600">{exe.trigger}</td>
-              <td className="px-4 py-3"><Badge status={exe.status} /></td>
-              <td className="px-4 py-3 text-zinc-600">{exe.duration}</td>
-              <td className="px-4 py-3 text-zinc-500 font-mono text-xs">{exe.timestamp}</td>
-              <td className="px-4 py-3 text-right">
-                <Button variant="ghost" size="sm">
-                  <Search className="w-4 h-4 mr-1.5" />
-                  Inspect
-                </Button>
+          {executions.length === 0 ? (
+            <tr>
+              <td className="px-4 py-8 text-center text-zinc-800">
+                No Executions found.
               </td>
             </tr>
-          ))}
+          ) : (
+            executions.map((exe) => (
+              <tr key={exe.id} className="hover:bg-zinc-50 transition-colors">
+                <td className="px-4 py-3 font-medium text-zinc-900">{exe.workflowName}</td>
+                <td className="px-4 py-3 text-zinc-600">{exe.trigger}</td>
+                <td className="px-4 py-3"><Badge status={exe.status} /></td>
+                <td className="px-4 py-3 text-zinc-600">{exe.duration}</td>
+                <td className="px-4 py-3 text-zinc-500 font-mono text-xs">{exe.timestamp}</td>
+                <td className="px-4 py-3 text-right">
+                  <Button variant="ghost" size="sm" onClick={() => navigate(`/executions/${exe.id}`)}>
+                    <Search className="w-4 h-4 mr-1.5" />
+                    Inspect
+                  </Button>
+                </td>
+              </tr>
+            ))
+          )}
+          
         </tbody>
       </table>
     </div>

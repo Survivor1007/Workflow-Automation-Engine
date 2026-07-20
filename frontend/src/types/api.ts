@@ -1,7 +1,7 @@
 export type ExecutionStatus = "PENDING" | "RUNNING" | "SUCCESS" | "FAILED";
 
 export interface Workflow {
-    id: String;
+    id: string;
     name: string;
     description: string;
     is_active: boolean;

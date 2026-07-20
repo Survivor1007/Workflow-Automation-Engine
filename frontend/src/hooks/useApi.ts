@@ -14,7 +14,7 @@ export const useWorkflows = () => {
 export const useRecentExecutions = () => {
   return useQuery({
     queryKey: ["executions", "recent"],
-    queryFn: async () => (await apiClient.get<ExecutionSummary[]>("/executions?limit=10")).data,
+    queryFn: async () => (await apiClient.get<ExecutionSummary[]>("/executions?limit=20")).data,
     refetchInterval: 5000, 
   });
 };
