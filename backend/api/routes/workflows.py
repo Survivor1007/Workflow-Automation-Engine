@@ -172,13 +172,11 @@ def get_execution_details(execution_id: int, db: Session = Depends(get_db)):
     # 4. Map the raw DB steps into the 'StepExecutionTrace' format the UI expects
     formatted_steps = []
     
-    # execution.execution_steps works because you defined the SQLAlchemy relationship!
     for step_exec in execution.execution_steps:
         # Retrieve the original workflow step to get the provider (e.g., 'discord_action')
         orig_step = db.query(WorkflowStep).filter(WorkflowStep.id == step_exec.step_id).first()
         provider_id = orig_step.node_provider if orig_step else "unknown"
         
-        # Format the provider name cleanly for the UI (e.g., 'discord_action' -> 'Discord Action')
         display_name = provider_id.replace("_", " ").title()
 
         formatted_steps.append({
